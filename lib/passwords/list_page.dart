@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/passwords/repositories/password_repositoriy.dart';
 
-import 'details_page.dart';
 import 'new_password.dart';
 import 'models/password.dart';
 
@@ -43,7 +42,7 @@ class _ListPageState extends State<ListPage> {
                               final Password? password = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => NewPassword(password: _passwords[index]),
+                                    builder: (context) => NewPassword(password: _passwords[index], isEditing: false,),
                                   )) ;
                               setState(() {
                                 if (password != null) {
@@ -78,7 +77,7 @@ class _ListPageState extends State<ListPage> {
         final password = await Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => NewPassword(password: Password("","","","")),
+              builder: (context) => NewPassword(password: Password("","","",""), isEditing: true),
             )) ;
         if (password != null) {
           setState(() {
