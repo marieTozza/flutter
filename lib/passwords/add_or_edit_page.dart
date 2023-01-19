@@ -144,18 +144,27 @@ class _AddOrEditAccountState extends State<AddOrEditAccount> {
                 Padding(
                   padding:
                   const EdgeInsets.symmetric(horizontal: 32.0),
-                  child: TextField(
-                    controller: controllers['password'],
-                    enabled: widget.isEditing,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Password"
+                  child: Row(children: [
+                    Expanded(
+                      child: TextField(
+                        controller: controllers['password'],
+                        enabled: widget.isEditing,
+                        decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: "Password"
+                        ),
+                        style:
+                        const TextStyle(fontSize: 20.0, color: Colors.white),
+                        obscuringCharacter: "•",
+                        obscureText: isHide,
+                      ),
                     ),
-                    style:
-                    const TextStyle(fontSize: 20.0, color: Colors.white),
-                    obscuringCharacter: "•",
-                    obscureText: true,
-                  ),
+                    IconButton(onPressed: (){
+                      setState(() {
+                        isHide = !isHide;
+                      });
+                    }, icon: const Icon(Icons.remove_red_eye, color: Color(0xFFBEBEBE)),)
+                  ],)
 
                 ),
                 const Divider(thickness: 10, color: Color(0xFF1E1E1E)),
@@ -173,7 +182,7 @@ class _AddOrEditAccountState extends State<AddOrEditAccount> {
                 url: controllers['login']!.text,
                 password: controllers['password']!.text
             );
-            Navigator.pop(context, widget.account);
+            Navigator.pop(context, widget.password);
           } else {
             setState(() {
               widget.isEditing = true;
@@ -181,9 +190,7 @@ class _AddOrEditAccountState extends State<AddOrEditAccount> {
             });
           }
         },
-
         child: icon,
-
       ),
     );
   }
