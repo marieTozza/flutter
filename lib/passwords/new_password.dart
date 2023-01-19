@@ -13,6 +13,7 @@ class NewPassword extends StatefulWidget {
 class _NewPasswordState extends State<NewPassword> {
   Icon icon = const Icon(Icons.check);
   bool isHide = true;
+  bool modification = false;
 
   @override
   void initState() {
@@ -48,7 +49,7 @@ class _NewPasswordState extends State<NewPassword> {
                   //EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
                   EdgeInsets.only(top: 32.0, bottom: 16.0, left: 16.0),
                   child: Text(
-                    "Titre :",
+                    "Title :",
                     style: TextStyle(
                       color: Color(0xFFBEBEBE),
                       fontSize: 24,
@@ -184,12 +185,28 @@ class _NewPasswordState extends State<NewPassword> {
                 controllers['login']!.text,
                 controllers['password']!.text
             );
-            Navigator.pop(context, widget.password);
+            if (modification){
+               final snackBar = SnackBar(
+                content: Text('Element: "${controllers['title']!.text}" modified'),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              Navigator.pop(context, widget.password);
+            }
+            else{
+               final snackBar = SnackBar(
+                content: Text('Element: "${controllers['title']!.text}" created'),
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              Navigator.pop(context, widget.password);
+            }
+
           } else {
             setState(() {
               widget.isEditing = true;
+              modification = true;
               icon = const Icon(Icons.check);
             });
+
           }
         },
         child: icon,
