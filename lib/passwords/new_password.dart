@@ -3,20 +3,19 @@ import 'package:flutter/material.dart';
 import 'models/password.dart';
 
 class NewPassword extends StatefulWidget {
-  Password password;
-  bool isEditing;
-  NewPassword({super.key, required this.password, required this.isEditing});
+  Password password = Password(" ", " ", " ", " ");
+
+  NewPassword({super.key, required this.password, required bool isEditing});
+
   @override
   State<NewPassword> createState() => _NewPasswordState();
 }
 
 class _NewPasswordState extends State<NewPassword> {
-  Icon icon = const Icon(Icons.check);
-  @override
-  void initState() {
-    icon = widget.isEditing? const Icon(Icons.check) : const Icon(Icons.edit);
-    super.initState();
-  }
+  bool isEditing = false;
+  Icon icon = const Icon(Icons.edit);
+  bool isHide = true;
+
   @override
   Widget build(BuildContext context) {
     // const title = password.title == " "? "Nouveau mot de passe":password.title;
@@ -58,7 +57,7 @@ class _NewPasswordState extends State<NewPassword> {
                   const EdgeInsets.symmetric(horizontal: 32.0),
                   child: TextField(
                     controller: controllers['title'],
-                    enabled: widget.isEditing,
+                    enabled: isEditing,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: "Title",
@@ -87,7 +86,7 @@ class _NewPasswordState extends State<NewPassword> {
                   const EdgeInsets.symmetric(horizontal: 32.0),
                   child: TextField(
                     controller: controllers['url'],
-                    enabled: widget.isEditing,
+                    enabled: isEditing,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: "URL"
@@ -116,7 +115,7 @@ class _NewPasswordState extends State<NewPassword> {
                   const EdgeInsets.symmetric(horizontal: 32.0),
                   child: TextField(
                     controller: controllers['login'],
-                    enabled: widget.isEditing,
+                    enabled: isEditing,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: "Login"
@@ -143,19 +142,27 @@ class _NewPasswordState extends State<NewPassword> {
                 Padding(
                   padding:
                   const EdgeInsets.symmetric(horizontal: 32.0),
-                  child: TextField(
-                    controller: controllers['password'],
-                    enabled: widget.isEditing,
-                    decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: "Password"
-                    ),
-                    style:
-                    const TextStyle(fontSize: 20.0, color: Colors.white),
-                    obscuringCharacter: "•",
-                    obscureText: true,
-                  ),
-
+                    child: Row(children: [
+                      Expanded(
+                        child: TextField(
+                          controller: controllers['password'],
+                          enabled: isEditing,
+                          decoration:  const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: "Password"
+                          ),
+                          style:
+                          const TextStyle(fontSize: 20.0, color: Colors.white),
+                          obscuringCharacter: "•",
+                          obscureText: isHide,
+                        ),
+                      ),
+                      IconButton(onPressed: (){
+                        setState(() {
+                          isHide = !isHide;
+                        });
+                      }, icon: const Icon(Icons.remove_red_eye, color: Color(0xFFBEBEBE),)),
+                    ],)
                 ),
                 const Divider(thickness: 10, color: Color(0xFF1E1E1E)),
 
@@ -166,7 +173,7 @@ class _NewPasswordState extends State<NewPassword> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
 
-          if (widget.isEditing == true) {
+          if (isEditing == true) {
             widget.password= Password(
                 controllers['title']!.text,
                 controllers['url']!.text,
@@ -176,11 +183,12 @@ class _NewPasswordState extends State<NewPassword> {
             Navigator.pop(context, widget.password);
           } else {
             setState(() {
-              widget.isEditing = true;
+              isEditing = true;
               icon = const Icon(Icons.check);
             });
           }
         },
+
         child: icon,
 
       ), // This trailing comma makes auto-formatting nicer for build methods.
