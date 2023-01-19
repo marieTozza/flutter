@@ -1,27 +1,31 @@
 import 'package:flutter/material.dart';
 
-import 'models/password.dart';
+import 'models/account.dart';
 
-class NewPassword extends StatefulWidget {
-  Password password = Password(" ", " ", " ", " ");
-
-  NewPassword({super.key, required this.password});
-
+class AddOrEditAccount extends StatefulWidget {
+  Account account;
+  int  index;
+  bool isEditing;
+  AddOrEditAccount({super.key, required this.index, required this.account, required this.isEditing});
   @override
-  State<NewPassword> createState() => _NewPasswordState();
+  State<AddOrEditAccount> createState() => _AddOrEditAccountState();
 }
 
-class _NewPasswordState extends State<NewPassword> {
-  bool isEditing = false;
-  Icon icon = const Icon(Icons.edit);
+class _AddOrEditAccountState extends State<AddOrEditAccount> {
+  late Icon icon;
+
   @override
   Widget build(BuildContext context) {
-    // const title = password.title == " "? "Nouveau mot de passe":password.title;
+    if(widget.isEditing == true){
+      icon = const Icon(Icons.check);
+    } else {
+      icon = const Icon(Icons.edit);
+    }
     var controllers = {
-      "title": TextEditingController(text: widget.password.title),
-      "url": TextEditingController(text: widget.password.url),
-      "login": TextEditingController(text: widget.password.login),
-      "password": TextEditingController(text: widget.password.password),
+      "title": TextEditingController(text: widget.account.title),
+      "url": TextEditingController(text: widget.account.url),
+      "login": TextEditingController(text: widget.account.login),
+      "password": TextEditingController(text: widget.account.password),
     };
 
     return Scaffold(
@@ -55,7 +59,7 @@ class _NewPasswordState extends State<NewPassword> {
                   const EdgeInsets.symmetric(horizontal: 32.0),
                   child: TextField(
                     controller: controllers['title'],
-                    enabled: isEditing,
+                    enabled: widget.isEditing,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       hintText: "Title",
@@ -84,7 +88,7 @@ class _NewPasswordState extends State<NewPassword> {
                   const EdgeInsets.symmetric(horizontal: 32.0),
                   child: TextField(
                     controller: controllers['url'],
-                    enabled: isEditing,
+                    enabled: widget.isEditing,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: "URL"
@@ -113,7 +117,7 @@ class _NewPasswordState extends State<NewPassword> {
                   const EdgeInsets.symmetric(horizontal: 32.0),
                   child: TextField(
                     controller: controllers['login'],
-                    enabled: isEditing,
+                    enabled: widget.isEditing,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: "Login"
@@ -142,7 +146,7 @@ class _NewPasswordState extends State<NewPassword> {
                   const EdgeInsets.symmetric(horizontal: 32.0),
                   child: TextField(
                     controller: controllers['password'],
-                    enabled: isEditing,
+                    enabled: widget.isEditing,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         hintText: "Password"
@@ -162,18 +166,17 @@ class _NewPasswordState extends State<NewPassword> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
-          if (isEditing == true) {
-            widget.password= Password(
-                controllers['title']!.text,
-                controllers['url']!.text,
-                controllers['login']!.text,
-                controllers['password']!.text
+          if (widget.isEditing == true) {
+            widget.account = Account(
+                title: controllers['title']!.text,
+                login: controllers['url']!.text,
+                url: controllers['login']!.text,
+                password: controllers['password']!.text
             );
-            Navigator.pop(context, widget.password);
+            Navigator.pop(context, widget.account);
           } else {
             setState(() {
-              isEditing = true;
+              widget.isEditing = true;
               icon = const Icon(Icons.check);
             });
           }
@@ -181,7 +184,7 @@ class _NewPasswordState extends State<NewPassword> {
 
         child: icon,
 
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }

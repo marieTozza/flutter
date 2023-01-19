@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/passwords/list_page.dart';
-import 'package:my_app/passwords/models/password.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:my_app/passwords/home_page.dart';
+import 'package:my_app/passwords/models/account.dart';
 
-void main() {
+Future<void> main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(AccountAdapter());
+  await Hive.openBox<Account>('Account');
+  // await AccountRepository.fillAccounts();
   runApp(const MyApp());
 }
 
@@ -17,7 +23,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.grey,
       ),
-      home: const ListPage(title: 'PassKeeper'),
+      home: const ListPage(title: 'PassKeeper')
     );
   }
 }
