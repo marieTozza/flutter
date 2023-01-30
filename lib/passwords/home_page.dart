@@ -58,6 +58,8 @@ class _ListPageState extends State<ListPage> {
                                 setState(() {
                                   if (account != null) {
                                     AccountRepository.editAccount(index, account);
+                                  } else {
+                                    AccountRepository.removeAccount(index);
                                   }
                                 });
                               },

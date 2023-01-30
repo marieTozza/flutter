@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'models/account.dart';
 
 class AddOrEditAccount extends StatefulWidget {
-  Account account;
+  Account? account;
   int  index;
   bool isEditing;
   AddOrEditAccount({super.key, required this.index, required this.account, required this.isEditing});
@@ -13,7 +13,7 @@ class AddOrEditAccount extends StatefulWidget {
 
 class _AddOrEditAccountState extends State<AddOrEditAccount> {
   late Icon icon;
-
+  bool isHide = true;
   @override
   Widget build(BuildContext context) {
     if(widget.isEditing == true){
@@ -22,10 +22,10 @@ class _AddOrEditAccountState extends State<AddOrEditAccount> {
       icon = const Icon(Icons.edit);
     }
     var controllers = {
-      "title": TextEditingController(text: widget.account.title),
-      "url": TextEditingController(text: widget.account.url),
-      "login": TextEditingController(text: widget.account.login),
-      "password": TextEditingController(text: widget.account.password),
+      "title": TextEditingController(text: widget.account?.title),
+      "url": TextEditingController(text: widget.account?.url),
+      "login": TextEditingController(text: widget.account?.login),
+      "password": TextEditingController(text: widget.account?.password),
     };
 
     return Scaffold(
@@ -173,7 +173,10 @@ class _AddOrEditAccountState extends State<AddOrEditAccount> {
           )],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton:  Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
         onPressed: () {
           if (widget.isEditing == true) {
             widget.account = Account(
@@ -182,7 +185,11 @@ class _AddOrEditAccountState extends State<AddOrEditAccount> {
                 url: controllers['login']!.text,
                 password: controllers['password']!.text
             );
-            Navigator.pop(context, widget.password);
+            final snackBar = SnackBar(
+              content: Text('Element: "${controllers['title']!.text}" saved'),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.pop(context, widget.account);
           } else {
             setState(() {
               widget.isEditing = true;
@@ -192,6 +199,21 @@ class _AddOrEditAccountState extends State<AddOrEditAccount> {
         },
         child: icon,
       ),
+            FloatingActionButton(
+              onPressed: () async {
+                widget.account = null;
+                const snackBar = SnackBar(
+                  content: Text('Suppression réussie !'),
+                );
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                Navigator.pop(context);
+              },
+              child: const Icon(
+                  Icons.delete
+              ),
+            )] ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
+
+
